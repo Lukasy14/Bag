@@ -11,6 +11,7 @@ public class ItemOnworld : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+            Debug.Log("2");
             AddNewItem();
             Destroy(gameObject);
         }
@@ -19,12 +20,15 @@ public class ItemOnworld : MonoBehaviour
     public void AddNewItem()
     {
         if(!playerInventory.itemList.Contains(thisItem))
-        {
+        { 
+            Debug.Log("1");
             playerInventory.itemList.Add(thisItem);
         }
         else
         {
             thisItem.itemHeld += 1;
         }
+
+        InventorManager.RefreshItem();
     }
 }
