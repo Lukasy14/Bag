@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     Collider2D coll;
     Animator anim;
 
+    public GameObject myBag;
+    public bool isOpen;
     public float speed;
     Vector2 movement;
 
@@ -22,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Movement();
         SwitchAnim();
+        OpenBag();
     }
 
     void Movement()//移动
@@ -40,5 +43,14 @@ public class PlayerMovement : MonoBehaviour
             anim.SetFloat("vertical", movement.y);
         }
         anim.SetFloat("speed", movement.magnitude);//magnitude 也可以用 sqrMagnitude 具体可以参考Api 默认返回值永远>=0
+    }
+
+    void OpenBag()
+    {
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            isOpen = !isOpen;
+            myBag.SetActive(isOpen);
+        }
     }
 }
