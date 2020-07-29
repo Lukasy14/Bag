@@ -9,8 +9,11 @@ public class InventorManager : MonoBehaviour
 
     public Inventory myBag;
     public GameObject slotGrid;
-    public Slot slotPrefab;
+    // public Slot slotPrefab;
+    public GameObject emptySlot;
     public Text itemInformation;
+
+    public List<GameObject> slots = new List<GameObject>();
     void Awake()
     {
         if(instance != null)
@@ -31,16 +34,6 @@ public class InventorManager : MonoBehaviour
         instance.itemInformation.text = itemDescription;
     }
 
-    public static void CreatNewItem(Item item)
-    {
-        Debug.Log("CreatNewItem");
-        Slot newItem = Instantiate(instance.slotPrefab, instance.slotGrid.transform.position, Quaternion.identity);
-        newItem.gameObject.transform.SetParent(instance.slotGrid.transform);
-        newItem.slotItem = item;
-        newItem.slotImage.sprite = item.itemImage;
-        newItem.slotNum.text = item.itemHeld.ToString();
-
-    }
 
     public static void RefreshItem()
     {
@@ -51,11 +44,14 @@ public class InventorManager : MonoBehaviour
                 break;
             }
             Destroy(instance.slotGrid.transform.GetChild(i).gameObject);
+            instance.slots.Clear();
         }
 
         for(int i = 0; i < instance.myBag.itemList.Count; i++)
         {
-            CreatNewItem(instance.myBag.itemList[i]);
+            instance.slots.Add(Instantiate(instance.emptySlot));
+            instance.slots[i].transform.SetParent(instance.slotGrid.transform);
+            instance.slots[i].GetComponent<Slot>().SetupSlot(instance.myBag.itemList[i]);
         }
     }
 
