@@ -9,7 +9,7 @@ public class Slot : MonoBehaviour
     public Item slotItem;
     public Image slotImage;
     public Text slotNum;
-    public int slotHeld;
+
     public string slotInfo;
 
     public GameObject itemInSlot;
@@ -28,7 +28,7 @@ public class Slot : MonoBehaviour
         }
 
         slotImage.sprite = item.itemImage;
-        slotNum.text = (slotHeld + item.itemHeld).ToString();
+        slotNum.text = item.itemHeld.ToString();
         slotInfo = item.itemInfo;
     }
 }

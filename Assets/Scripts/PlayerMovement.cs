@@ -47,10 +47,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OpenBag()
     {
+        isOpen = myBag.activeSelf;
         if(Input.GetKeyDown(KeyCode.B))
         {
             isOpen = !isOpen;
             myBag.SetActive(isOpen);
+            InventorManager.RefreshItem();
         }
     }
 }
