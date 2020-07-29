@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ItemOnDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public Inventory myBag;
+    private int currentItemID;//当前物品id
     public Transform originalParent;
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -21,27 +24,50 @@ public class ItemOnDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         transform.position = eventData.position;
         //pointerCurrentRaycast获取鼠标当前射线所碰到的
-        Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
+        //Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if(eventData.pointerCurrentRaycast.gameObject.name == "ItemImage")
+        if (eventData.pointerCurrentRaycast.gameObject != null)
         {
-            transform.SetParent(eventData.pointerCurrentRaycast.gameObject.transform.parent.parent);
-            transform.position = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.position;
+            if (eventData.pointerCurrentRaycast.gameObject.name == "ItemImage")
+            {
+                transform.SetParent(eventData.pointerCurrentRaycast.gameObject.transform.parent.parent);
+                transform.position = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.position;
 
+                var temp = myBag.itemList[currentItemID];
+                myBag.itemList[currentItemID] = myBag.itemList[eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<Slot>().slotID];
+                myBag.itemList[eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<Slot>().slotID] = temp;
 
-            eventData.pointerCurrentRaycast.gameObject.transform.parent.position = originalParent.position;
-            eventData.pointerCurrentRaycast.gameObject.transform.parent.SetParent(originalParent);
+                eventData.pointerCurrentRaycast.gameObject.transform.parent.position = originalParent.position;
+                eventData.pointerCurrentRaycast.gameObject.transform.parent.SetParent(originalParent);
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
+                return;
+            }
+
+            if (eventData.pointerCurrentRaycast.gameObject.name == "slot(Clone)")
+            {
+                transform.SetParent(eventData.pointerCurrentRaycast.gameObject.transform);
+                transform.position = eventData.pointerCurrentRaycast.gameObject.transform.position;
+
+                myBag.itemList[eventData.pointerCurrentRaycast.gameObject.GetComponentInParent<Slot>().slotID] = myBag.itemList[currentItemID];
+                if (eventData.pointerCurrentRaycast.gameObject.GetComponent<Slot>().slotID != currentItemID)
+                {
+                    myBag.itemList[currentItemID] = null;
+                }
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
+                return;
+            }
+            transform.SetParent(originalParent);
+            transform.position = originalParent.position;
             GetComponent<CanvasGroup>().blocksRaycasts = true;
-            return;
         }
 
-        transform.SetParent(eventData.pointerCurrentRaycast.gameObject.transform);
-        transform.position = eventData.pointerCurrentRaycast.gameObject.transform.position;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
-        
+
+
+
+
     }
 
 }

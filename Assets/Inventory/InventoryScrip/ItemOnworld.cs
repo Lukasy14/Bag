@@ -6,6 +6,7 @@ public class ItemOnworld : MonoBehaviour
 {
     public Item thisItem;
     public Inventory playerInventory;
+    public Slot slot;
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
